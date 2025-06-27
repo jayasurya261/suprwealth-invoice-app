@@ -3,12 +3,15 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const prisma = new PrismaClient()
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } }
-) {
+type Context = {
+  params: {
+    id: string
+  }
+}
+
+export async function PATCH(req: NextRequest, context: Context) {
   try {
-    const invoiceId = parseInt(params.id)
+    const invoiceId = parseInt(context.params.id)
     const body = await req.json()
     const { status } = body
 
