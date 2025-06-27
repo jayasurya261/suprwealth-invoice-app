@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import RevenueChart from '@/components/RevenueChart'
 
 type Invoice = {
   id: number
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   })
 
   const [latestInvoices, setLatestInvoices] = useState<Invoice[]>([])
+  const [revenueData, setRevenueData] = useState([])
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -36,8 +38,15 @@ export default function DashboardPage() {
       setLatestInvoices(data)
     }
 
+    const fetchRevenue = async () => {
+      const res = await fetch('/api/dashboard/revenue')
+      const data = await res.json()
+      setRevenueData(data)
+    }
+
     fetchStats()
     fetchInvoices()
+    fetchRevenue()
   }, [])
 
   return (
@@ -51,14 +60,10 @@ export default function DashboardPage() {
         <Card title="Unpaid" value={stats.unpaidInvoices} />
       </div>
 
-      {/* Revenue placeholder */}
-      <h2 className="text-xl font-bold mb-2">Revenue (Chart Coming Soon)</h2>
-      <div className="bg-gray-100 rounded h-40 mb-6 flex items-center justify-center text-gray-600">
-        Revenue chart will be shown here.
-      </div>
+      <h2 className="text-xl font-bold mb-2">Monthly Revenue</h2>
+      <RevenueChart data={revenueData} />
 
-      {/* Latest Invoices */}
-      <h2 className="text-xl font-bold mb-2">Latest Invoices</h2>
+      <h2 className="text-xl font-bold mt-6 mb-2">Latest Invoices</h2>
       <div className="overflow-x-auto">
         <table className="w-full bg-white shadow rounded text-left">
           <thead className="bg-gray-100">
