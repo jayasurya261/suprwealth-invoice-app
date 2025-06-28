@@ -1,16 +1,15 @@
 import { PrismaClient } from '@/app/generated/prisma'
 import { NextRequest, NextResponse } from 'next/server'
 
-// Initialize Prisma client
 const prisma = new PrismaClient()
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } } // Simplified params type
+  request: NextRequest,
+  context: { params: { id: string } }
 ) {
   try {
-    const invoiceId = parseInt(params.id)
-    const body = await req.json()
+    const invoiceId = parseInt(context.params.id)
+    const body = await request.json()
     const { status } = body
 
     if (!status || !['paid', 'unpaid'].includes(status)) {
