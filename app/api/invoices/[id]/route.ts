@@ -1,35 +1,35 @@
-// app/api/invoices/[id]/route.ts
+import { PrismaClient } from '@/app/generated/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import type { Params } from 'next/dist/server/request/params';
 
-import { PrismaClient } from '@/app/generated/prisma'
-import { NextRequest, NextResponse } from 'next/server'
-
-const prisma = new PrismaClient()
+// Initialize Prisma client
+const prisma = new PrismaClient();
 
 export async function PATCH(
   request: NextRequest,
-  context: { params: { id: string } } // ✅ INLINE type only
+  { params }: { params: Params } // Use the Next.js Params type
 ) {
   try {
-    const invoiceId = parseInt(context.params.id)
+    const invoiceId = parseInt(params.id);
 
     if (isNaN(invoiceId)) {
-      return NextResponse.json({ error: 'Invalid invoice ID' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid invoice ID' }, { status: 400 });
     }
 
-    const { status } = await request.json()
+    const { status } = await request.json();
 
     if (!['paid', 'unpaid'].includes(status)) {
-      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
     }
 
     const updatedInvoice = await prisma.invoice.update({
       where: { id: invoiceId },
       data: { status },
-    })
+    });
 
-    return NextResponse.json(updatedInvoice)
+    return NextResponse.json(updatedInvoice);
   } catch (error) {
-    console.error('PATCH error:', error)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    console.error('PATCH error:', error);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
