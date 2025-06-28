@@ -53,7 +53,7 @@ export default function DashboardPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-black">
         <Card title="Customers" value={stats.customers} />
         <Card title="Invoices" value={stats.invoices} />
         <Card title="Paid" value={stats.paidInvoices} />
@@ -65,7 +65,7 @@ export default function DashboardPage() {
 
       <h2 className="text-xl font-bold mt-6 mb-2">Latest Invoices</h2>
       <div className="overflow-x-auto">
-        <table className="w-full bg-white shadow rounded text-left">
+        <table className="w-full bg-white shadow rounded text-left text-black">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-2">Customer</th>
