@@ -1,16 +1,17 @@
-// app/api/invoices/[id]/route.ts
-
 import { PrismaClient } from '@/app/generated/prisma'
 import { NextRequest, NextResponse } from 'next/server'
+// 👇👇👇 Official internal type for dynamic route context
+import type { RouteHandlerContext } from 'next/dist/server/web/types'
 
 const prisma = new PrismaClient()
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteHandlerContext // ✅ correct type for dynamic routes
 ): Promise<NextResponse> {
   try {
-    const invoiceId = parseInt(params.id)
+    const id = context.params?.id
+    const invoiceId = parseInt(id as string)
 
     if (isNaN(invoiceId)) {
       return NextResponse.json({ error: 'Invalid invoice ID' }, { status: 400 })
@@ -22,12 +23,12 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
     }
 
-    const updatedInvoice = await prisma.invoice.update({
+    const updated = await prisma.invoice.update({
       where: { id: invoiceId },
       data: { status },
     })
 
-    return NextResponse.json(updatedInvoice, { status: 200 })
+    return NextResponse.json(updated)
   } catch (error) {
     console.error('PATCH error:', error)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
