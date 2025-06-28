@@ -4,14 +4,9 @@ import { NextRequest, NextResponse } from 'next/server'
 // Initialize Prisma client
 const prisma = new PrismaClient()
 
-// Define the expected params type
-interface Params {
-  id: string
-}
-
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: Params } // ✅ Use explicit interface for params
+  { params }: { params: { id: string } } // Simplified params type
 ) {
   try {
     const invoiceId = parseInt(params.id)
